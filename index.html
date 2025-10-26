@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRADOX AUXILIO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: white;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+        }
+
+        /* Glow effect background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 150, 0.15) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* Main container - LANDSCAPE MODE */
+        .main-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85vh;
+            height: 50vh;
+            background: rgba(30, 20, 40, 0.95);
+            border: 3px solid #ff0096;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 0, 150, 0.6), inset 0 0 30px rgba(255, 0, 150, 0.1);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(20, 15, 30, 0.8);
+            padding: 12px;
+            text-align: center;
+            border-bottom: 2px solid #ff0096;
+        }
+
+        .header h1 {
+            color: #ff0096;
+            font-size: 22px;
+            font-weight: bold;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 0, 150, 0.8);
+        }
+
+        /* Content area - HORIZONTAL LAYOUT */
+        .content {
+            display: flex;
+            height: calc(100% - 55px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 120px;
+            background: rgba(40, 20, 50, 0.6);
+            border-right: 2px solid #ff0096;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 0;
+        }
+
+        .sidebar-btn {
+            padding: 12px;
+            margin: 5px 8px;
+            background: rgba(255, 0, 150, 0.2);
+            border: 2px solid #ff0096;
+            border-radius: 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sidebar-btn:hover {
+            background: rgba(255, 0, 150, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 150, 0.6);
+        }
+
+        .sidebar-btn.active {
+            background: rgba(255, 0, 150, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 150, 0.8);
+        }
+
+        .sidebar-icon {
+            font-size: 24px;
+        }
+
+        /* Main panel - OPTIMIZED FOR LANDSCAPE */
+        .main-panel {
+            flex: 1;
+            padding: 15px;
+            background: rgba(25, 15, 35, 0.4);
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Left column */
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Right column */
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Checkbox option */
+        .option {
+            background: rgba(40, 25, 50, 0.8);
+            border: 2px solid rgba(255, 0, 150, 0.3);
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #ff0096;
+            box-shadow: 0 0 15px rgba(255, 0, 150, 0.4);
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            background: transparent;
+            border: 2px solid #ff0096;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox.checked {
+            background: #ff0096;
+            box-shadow: 0 0 10px rgba(255, 0, 150, 0.6);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .option-label {
+            font-size: 13px;
+            color: #fff;
+        }
+
+        /* Slider section */
+        .slider-section {
+            background: rgba(40, 25, 50, 0.8);
+            border: 2px solid rgba(255, 0, 150, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            flex: 1;
+        }
+
+        .slider-header {
+            text-align: center;
+            color: #ff0096;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .slider-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0096, #ff0096);
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 0, 150, 0.6);
+        }
+
+        .slider-knob {
+            width: 18px;
+            height: 18px;
+            background: #ff0096;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            top: -6px;
+            right: -9px;
+            cursor: grab;
+            box-shadow: 0 0 15px rgba(255, 0, 150, 0.8);
+        }
+
+        .slider-knob:active {
+            cursor: grabbing;
+        }
+
+        /* Dropdown */
+        .dropdown-section {
+            background: rgba(40, 25, 50, 0.8);
+            border: 2px solid rgba(255, 0, 150, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .dropdown-label {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 10px;
+            background: rgba(20, 10, 30, 0.9);
+            border: 2px solid #ff0096;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 150, 0.4);
+        }
+
+        .dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 0, 150, 0.6);
+        }
+
+        /* Inject button */
+        .inject-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff0096, #ff0096);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(255, 0, 150, 0.6);
+        }
+
+        .inject-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 40px rgba(255, 0, 150, 0.8);
+        }
+
+        .inject-btn:active {
+            transform: translateY(0);
+        }
+
+        .status-message {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #00ff00;
+        }
+
+        /* Auth screen */
+        .auth-screen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(30, 20, 40, 0.95);
+            border: 3px solid #ff0096;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 0, 150, 0.6);
+            z-index: 100;
+        }
+
+        .auth-screen.hidden {
+            display: none;
+        }
+
+        .auth-title {
+            color: #ff0096;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .code-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ff0096;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .code-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 0, 150, 0.6);
+        }
+
+        .code-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .access-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff0096, #cc0077);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .access-btn:hover {
+            box-shadow: 0 5px 25px rgba(255, 0, 150, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            margin-top: 15px;
+        }
+
+        .main-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Screen -->
+    <div class="auth-screen" id="authScreen">
+        <h2 class="auth-title">Ingresa Código de Acceso</h2>
+        <input type="text" class="code-input" id="codeInput" placeholder="CÓDIGO" maxlength="4">
+        <button class="access-btn" onclick="checkCode()">ACCEDER</button>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <!-- Main container -->
+    <div class="main-container main-content" id="mainContent">
+        <!-- Header -->
+        <div class="header">
+            <h1>pradox auxilio</h1>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-btn active">
+                    <div class="sidebar-icon">🎯</div>
+                    <div>auxilio</div>
+                </div>
+            </div>
+
+            <!-- Main Panel -->
+            <div class="main-panel">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- Options -->
+                    <div class="option" onclick="toggleOption(this)">
+                        <div class="checkbox"></div>
+                        <span class="option-label">Activar Auxilio</span>
+                    </div>
+
+                    <div class="option" onclick="toggleOption(this)">
+                        <div class="checkbox"></div>
+                        <span class="option-label">NoRecoil</span>
+                    </div>
+
+                    <div class="option" onclick="toggleOption(this)">
+                        <div class="checkbox"></div>
+                        <span class="option-label">aumentar precisão</span>
+                    </div>
+
+                    <div class="option" onclick="toggleOption(this)">
+                        <div class="checkbox"></div>
+                        <span class="option-label">Touch Assistance</span>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Slider -->
+                    <div class="slider-section">
+                        <div class="slider-header">[ <span id="sliderValue">50</span> ]</div>
+                        <div class="slider-track" onclick="updateSlider(event)">
+                            <div class="slider-fill" style="width: 50%;">
+                                <div class="slider-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div class="dropdown-section">
+                        <div class="dropdown-label">Objetivo:</div>
+                        <select class="dropdown">
+                            <option>Cabeza</option>
+                            <option>Pecho</option>
+                            <option>Cuello</option>
+                        </select>
+                    </div>
+
+                    <!-- Inject Button -->
+                    <button class="inject-btn" onclick="injectFeatures()">INJETAR</button>
+                    <div class="status-message" id="statusMsg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const correctCode = "4PX6";
+        let isDragging = false;
+
+        function checkCode() {
+            const input = document.getElementById('codeInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input === correctCode) {
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('mainContent').style.display = 'block';
+                errorMsg.textContent = '';
+            } else {
+                errorMsg.textContent = 'Código incorrecto. Inténtalo de nuevo.';
+                document.getElementById('codeInput').value = '';
+            }
+        }
+
+        function toggleOption(element) {
+            const checkbox = element.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+        }
+
+        function updateSlider(event) {
+            const track = event.currentTarget;
+            const rect = track.getBoundingClientRect();
+            const percent = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+            const value = Math.round(percent);
+            
+            const fill = track.querySelector('.slider-fill');
+            fill.style.width = percent + '%';
+            document.getElementById('sliderValue').textContent = value;
+        }
+
+        function injectFeatures() {
+            const btn = event.target;
+            const statusMsg = document.getElementById('statusMsg');
+            
+            btn.textContent = 'INJETANDO...';
+            btn.style.background = 'linear-gradient(135deg, #ffaa00, #ff8800)';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = '✓ ACTIVAS';
+                btn.style.background = 'linear-gradient(135deg, #00aa00, #008800)';
+                statusMsg.textContent = 'Abriendo Free Fire...';
+                
+                // Intentar múltiples métodos para abrir Free Fire
+                setTimeout(() => {
+                    // Método 1: URL Scheme principal
+                    try {
+                        window.location.href = 'com.dts.freefireth://';
+                    } catch (e) {}
+                    
+                    // Método 2: Crear enlace y hacer click
+                    setTimeout(() => {
+                        try {
+                            const link = document.createElement('a');
+                            link.href = 'com.dts.freefireth://';
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        } catch (e) {}
+                    }, 100);
+                    
+                    // Método 3: Intent para Android
+                    setTimeout(() => {
+                        try {
+                            window.location.href = 'intent://freefireth/#Intent;scheme=com.dts.freefireth;package=com.dts.freefireth;end';
+                        } catch (e) {}
+                    }, 200);
+                    
+                    // Método 4: Free Fire MAX (alternativa)
+                    setTimeout(() => {
+                        try {
+                            window.location.href = 'com.dts.freefiremax://';
+                        } catch (e) {}
+                    }, 300);
+                    
+                    // Actualizar mensaje final
+                    setTimeout(() => {
+                        statusMsg.textContent = 'Activas en segundo plano';
+                    }, 2000);
+                    
+                }, 500);
+            }, 2000);
+        }
+
+        // Drag functionality for slider
+        document.addEventListener('mousedown', function(e) {
+            if (e.target.closest('.slider-knob') || e.target.closest('.slider-track')) {
+                isDragging = true;
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                const track = document.querySelector('.slider-track');
+                const rect = track.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                const value = Math.round(percent);
+                
+                const fill = track.querySelector('.slider-fill');
+                fill.style.width = percent + '%';
+                document.getElementById('sliderValue').textContent = value;
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        // Touch support
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.closest('.slider-knob') || e.target.closest('.slider-track')) {
+                isDragging = true;
+            }
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (isDragging) {
+                const track = document.querySelector('.slider-track');
+                const rect = track.getBoundingClientRect();
+                const touch = e.touches[0];
+                const percent = Math.max(0, Math.min(100, ((touch.clientX - rect.left) / rect.width) * 100));
+                const value = Math.round(percent);
+                
+                const fill = track.querySelector('.slider-fill');
+                fill.style.width = percent + '%';
+                document.getElementById('sliderValue').textContent = value;
+            }
+        });
+
+        document.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+
+        // Enter key for code
+        document.getElementById('codeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkCode();
+            }
+        });
+    </script>
+</body>
+</html>
